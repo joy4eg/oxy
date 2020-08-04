@@ -50,7 +50,7 @@ type Rebalancer struct {
 	newMeter NewMeterFn
 
 	// sticky session object
-	stickySession *StickySession
+	stickySession SessionSticker
 
 	requestRewriteListener RequestRewriteListener
 
@@ -90,7 +90,7 @@ func RebalancerErrorHandler(h utils.ErrorHandler) RebalancerOption {
 }
 
 // RebalancerStickySession sets a sticky session
-func RebalancerStickySession(stickySession *StickySession) RebalancerOption {
+func RebalancerStickySession(stickySession SessionSticker) RebalancerOption {
 	return func(r *Rebalancer) error {
 		r.stickySession = stickySession
 		return nil

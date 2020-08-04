@@ -19,25 +19,25 @@ type CookieOptions struct {
 	SameSite http.SameSite
 }
 
-// StickySession is a mixin for load balancers that implements layer 7 (http cookie) session affinity
-type StickySession struct {
+// StickySessionCookie is a mixin for load balancers that implements layer 7 (http cookie) session affinity
+type StickySessionCookie struct {
 	cookieName string
 	options    CookieOptions
 }
 
-// NewStickySession creates a new StickySession
-func NewStickySession(cookieName string) *StickySession {
-	return &StickySession{cookieName: cookieName}
+// NewStickySessionCookie creates a new StickySession
+func NewStickySessionCookie(cookieName string) SessionSticker {
+	return &StickySessionCookie{cookieName: cookieName}
 }
 
-// NewStickySessionWithOptions creates a new StickySession whilst allowing for options to
+// NewStickySessionCookieWithOptions creates a new StickySession whilst allowing for options to
 // shape its affinity cookie such as "httpOnly" or "secure"
-func NewStickySessionWithOptions(cookieName string, options CookieOptions) *StickySession {
-	return &StickySession{cookieName: cookieName, options: options}
+func NewStickySessionCookieWithOptions(cookieName string, options CookieOptions) SessionSticker {
+	return &StickySessionCookie{cookieName: cookieName, options: options}
 }
 
 // GetBackend returns the backend URL stored in the sticky cookie, iff the backend is still in the valid list of servers.
-func (s *StickySession) GetBackend(req *http.Request, servers []*url.URL) (*url.URL, bool, error) {
+func (s *StickySessionCookie) GetBackend(req *http.Request, servers []*url.URL) (*url.URL, bool, error) {
 	cookie, err := req.Cookie(s.cookieName)
 	switch err {
 	case nil:
@@ -59,7 +59,7 @@ func (s *StickySession) GetBackend(req *http.Request, servers []*url.URL) (*url.
 }
 
 // StickBackend creates and sets the cookie
-func (s *StickySession) StickBackend(backend *url.URL, w *http.ResponseWriter) {
+func (s *StickySessionCookie) StickBackend(backend *url.URL, w *http.ResponseWriter) {
 	opt := s.options
 
 	cp := "/"
@@ -81,7 +81,7 @@ func (s *StickySession) StickBackend(backend *url.URL, w *http.ResponseWriter) {
 	http.SetCookie(*w, cookie)
 }
 
-func (s *StickySession) isBackendAlive(needle *url.URL, haystack []*url.URL) bool {
+func (s *StickySessionCookie) isBackendAlive(needle *url.URL, haystack []*url.URL) bool {
 	if len(haystack) == 0 {
 		return false
 	}

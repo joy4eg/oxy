@@ -31,7 +31,7 @@ func ErrorHandler(h utils.ErrorHandler) LBOption {
 }
 
 // EnableStickySession enable sticky session
-func EnableStickySession(stickySession *StickySession) LBOption {
+func EnableStickySession(stickySession SessionSticker) LBOption {
 	return func(s *RoundRobin) error {
 		s.stickySession = stickySession
 		return nil
@@ -46,6 +46,12 @@ func RoundRobinRequestRewriteListener(rrl RequestRewriteListener) LBOption {
 	}
 }
 
+// SessionSticker is a generic interface to stick given session to a backend
+type SessionSticker interface {
+	GetBackend(*http.Request, []*url.URL) (*url.URL, bool, error)
+	StickBackend(*url.URL, *http.ResponseWriter)
+}
+
 // RoundRobin implements dynamic weighted round robin load balancer http handler
 type RoundRobin struct {
 	mutex      *sync.Mutex
@@ -55,7 +61,7 @@ type RoundRobin struct {
 	index                  int
 	servers                []*server
 	currentWeight          int
-	stickySession          *StickySession
+	stickySession          SessionSticker
 	requestRewriteListener RequestRewriteListener
 
 	log *log.Logger

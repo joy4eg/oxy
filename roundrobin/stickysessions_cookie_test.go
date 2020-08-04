@@ -24,7 +24,7 @@ func TestBasic(t *testing.T) {
 	fwd, err := forward.New()
 	require.NoError(t, err)
 
-	sticky := NewStickySession("test")
+	sticky := NewStickySessionCookie("test")
 	require.NotNil(t, sticky)
 
 	lb, err := New(fwd, EnableStickySession(sticky))
@@ -66,7 +66,7 @@ func TestStickyCookie(t *testing.T) {
 	fwd, err := forward.New()
 	require.NoError(t, err)
 
-	sticky := NewStickySession("test")
+	sticky := NewStickySessionCookie("test")
 	require.NotNil(t, sticky)
 
 	lb, err := New(fwd, EnableStickySession(sticky))
@@ -219,7 +219,7 @@ func TestStickyCookieWithOptions(t *testing.T) {
 			fwd, err := forward.New()
 			require.NoError(t, err)
 
-			sticky := NewStickySessionWithOptions(test.name, test.options)
+			sticky := NewStickySessionCookieWithOptions(test.name, test.options)
 			require.NotNil(t, sticky)
 
 			lb, err := New(fwd, EnableStickySession(sticky))
@@ -252,7 +252,7 @@ func TestRemoveRespondingServer(t *testing.T) {
 	fwd, err := forward.New()
 	require.NoError(t, err)
 
-	sticky := NewStickySession("test")
+	sticky := NewStickySessionCookie("test")
 	require.NotNil(t, sticky)
 
 	lb, err := New(fwd, EnableStickySession(sticky))
@@ -322,7 +322,7 @@ func TestRemoveAllServers(t *testing.T) {
 	fwd, err := forward.New()
 	require.NoError(t, err)
 
-	sticky := NewStickySession("test")
+	sticky := NewStickySessionCookie("test")
 	require.NotNil(t, sticky)
 
 	lb, err := New(fwd, EnableStickySession(sticky))
@@ -375,7 +375,7 @@ func TestBadCookieVal(t *testing.T) {
 	fwd, err := forward.New()
 	require.NoError(t, err)
 
-	sticky := NewStickySession("test")
+	sticky := NewStickySessionCookie("test")
 	require.NotNil(t, sticky)
 
 	lb, err := New(fwd, EnableStickySession(sticky))
